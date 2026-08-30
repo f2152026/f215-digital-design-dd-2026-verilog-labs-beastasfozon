@@ -10,6 +10,7 @@
 // TODO: instantiate four FA_Gate instances, same chaining pattern as
 // Task 2 (FA0..FA3, carry chain c1,c2,c3).
 
+
 module FA_Gate(
   input a,
   input b,
