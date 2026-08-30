@@ -60,12 +60,37 @@ module cla64_flat(
   // both checks.
   //
   // TODO: paste your verified assign statements for c[1] through c[64] here.
+  function automatic carry_bit;
+    input integer   k;
+    input [63:0]    pp, gg;
+    input           cn;
+    integer j, m;
+    reg     term;
+    begin
+      term = cn;
+      for (m = 0; m <= k-1; m = m + 1)
+        term = term & pp[m];
+      carry_bit = term;
+      for (j = k-1; j >= 0; j = j - 1) begin
+        term = gg[j];
+        for (m = k-1; m > j; m = m - 1)
+          term = term & pp[m];
+        carry_bit = carry_bit | term;
+      end
+    end
+  endfunction
 
+  generate
+    for (i = 1; i <= 64; i = i + 1) begin : gen_c
+      assign #(2) c[i] = carry_bit(i, p, g, cin);
+    end
+  endgenerate
   assign cout = c[64];
 
   // ---------------------------------------------------------------------
   // Step 3: sum bits
   // ---------------------------------------------------------------------
   // TODO: assign #(2) sum = p ^ {c[63:1], cin};
+    assign #(2) sum = p ^ {c[63:1], cin};
 
 endmodule
